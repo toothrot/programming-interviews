@@ -10,12 +10,8 @@ class ListStack
   end
 
   def push(value)
-    if self.head
-      old_head = self.head
-      self.head = ListElement.new(value: value, next_element: old_head)
-    else
-      self.head = ListElement.new(value: value, next_element: nil)
-    end
+    old_head = self.head
+    self.head = ListElement.new(value: value, next_element: old_head)
   end
 
   # Needs more tests
@@ -84,5 +80,17 @@ class TestListStack < Minitest::Test
   def test_empty_length
     stack = stack_class.new
     assert_equal(0, stack.length)
+  end
+
+  def test_each
+    stack = stack_class.new
+    stack.push 1
+    stack.push 456
+
+    values = []
+    stack.each do |element|
+      values << element.value
+    end
+    assert_equal([456, 1], values)
   end
 end
