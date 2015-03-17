@@ -41,21 +41,18 @@ class List
 
   # Deletes the first instance of value from list
   def delete(value)
-    current_head = self.head
-    previous_element = nil
-    while current_head != nil && current_head.next_element != nil
-      if current_head.next_element.value == value
-        current_head.next_element = current_head.next_element.next_element
+    self.each_element do |element|
+      if element.next_element && element.next_element.value == value
+        element.next_element = element.next_element.next_element
       end
-      current_head = current_head.next_element
     end
   end
 
   def pop
-    former_head = self.head
-    if former_head
-      self.head = former_head.next_element
-      former_head.value
+    if self.head
+      value = self.head.value
+      self.head = self.head.next_element
+      value
     end
   end
 end
