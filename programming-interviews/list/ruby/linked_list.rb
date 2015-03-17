@@ -1,7 +1,7 @@
 class List
   attr_accessor :head
 
-  class ListElement
+  class Element
     attr_accessor :value, :next_element
     def initialize(value: , next_element: )
       self.value = value
@@ -11,7 +11,7 @@ class List
 
   def push(value)
     old_head = self.head
-    self.head = ListElement.new(value: value, next_element: old_head)
+    self.head = Element.new(value: value, next_element: old_head)
   end
 
   # Needs more tests
@@ -63,7 +63,7 @@ class List
   def insert_after(target_value, value)
     self.each_element do |element|
       if element.value == target_value
-        new_element = ListElement.new(value: value, next_element: element.next_element)
+        new_element = Element.new(value: value, next_element: element.next_element)
         element.next_element = new_element
       end
     end
@@ -71,7 +71,7 @@ class List
 
   def append(value)
     last_element = self.each_element
-    last_element.next_element = ListElement.new(value: value, next_element: nil)
+    last_element.next_element = Element.new(value: value, next_element: nil)
   end
 end
 
