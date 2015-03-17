@@ -14,7 +14,6 @@ class List
     self.head = Element.new(value: value, next_element: old_head)
   end
 
-  # Needs more tests
   def each_element(&block)
     current_head = head
     yield current_head if block
@@ -72,6 +71,29 @@ class List
   def append(value)
     last_element = self.each_element
     last_element.next_element = Element.new(value: value, next_element: nil)
+  end
+
+  def nth_to_last(n)
+    nth_to_last = nil
+    index = 0
+
+    self.each_element do |element|
+      nth_to_last ||= element
+
+      if index >= n + 1
+        nth_to_last = nth_to_last.next_element
+      end
+
+      index += 1
+    end
+
+    if n > index
+      nth_to_last = nil
+    end
+
+    if nth_to_last
+      nth_to_last.value
+    end
   end
 end
 
@@ -193,5 +215,21 @@ class TestList < Minitest::Test
     assert_equal(1, list.pop)
     assert_equal(1024, list.pop)
     assert_equal(nil, list.pop)
+  end
+
+  def test_nth_to_last
+    list = List.new
+    list.push 1
+    list.push 2
+    list.push 3
+    list.push 4
+    list.push 5
+
+    assert_equal(1, list.nth_to_last(0))
+    assert_equal(2, list.nth_to_last(1))
+    assert_equal(3, list.nth_to_last(2))
+    assert_equal(4, list.nth_to_last(3))
+    assert_equal(5, list.nth_to_last(4))
+    assert_equal(nil, list.nth_to_last(6))
   end
 end
