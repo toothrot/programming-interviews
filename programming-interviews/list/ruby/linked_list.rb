@@ -41,9 +41,13 @@ class List
 
   # Deletes the first instance of value from list
   def delete(value)
-    self.each_element do |element|
-      if element.next_element && element.next_element.value == value
-        element.next_element = element.next_element.next_element
+    if self.head && self.head.value == value
+      self.head = self.head.next_element
+    else
+      self.each_element do |element|
+        if element.next_element && element.next_element.value == value
+          element.next_element = element.next_element.next_element
+        end
       end
     end
   end
@@ -121,5 +125,34 @@ class TestList < Minitest::Test
     assert_equal(1024, stack.pop)
     assert_equal(1, stack.pop)
   end
-end
 
+  def test_deleting_head_of_list
+    stack = List.new
+    stack.push 1
+    stack.push 456
+    stack.push 1024
+
+    stack.delete(1024)
+    assert_equal(456, stack.pop)
+    assert_equal(1, stack.pop)
+  end
+
+  def test_deleting_only_element
+    stack = List.new
+    stack.push 1024
+
+    stack.delete(1024)
+    assert_equal(0, stack.length)
+  end
+
+  def test_deleting_final_element
+    stack = List.new
+    stack.push 1
+    stack.push 456
+    stack.push 1024
+
+    stack.delete(1)
+    assert_equal(1024, stack.pop)
+    assert_equal(456, stack.pop)
+  end
+end
