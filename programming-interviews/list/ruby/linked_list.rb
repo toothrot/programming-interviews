@@ -15,13 +15,13 @@ class List
   end
 
   # Needs more tests
-  def each_element
+  def each_element(&block)
     current_head = head
-    yield current_head
+    yield current_head if block
     
     while current_head.next_element != nil
       current_head = current_head.next_element
-      yield current_head
+      yield current_head if block
     end
 
     current_head
@@ -59,100 +59,139 @@ class List
       value
     end
   end
+
+  def insert_after(target_value, value)
+    self.each_element do |element|
+      if element.value == target_value
+        new_element = ListElement.new(value: value, next_element: element.next_element)
+        element.next_element = new_element
+      end
+    end
+  end
+
+  def append(value)
+    last_element = self.each_element
+    last_element.next_element = ListElement.new(value: value, next_element: nil)
+  end
 end
 
 require 'minitest/autorun'
 class TestList < Minitest::Test
   def test_pushing_an_item
-    stack = List.new
-    stack.push 1
+    list = List.new
+    list.push 1
 
-    assert_equal(1, stack.length)
+    assert_equal(1, list.length)
   end
 
   def test_pushing_and_popping_two_items
-    stack = List.new
-    stack.push 1
-    stack.push 456
+    list = List.new
+    list.push 1
+    list.push 456
 
-    assert_equal(2, stack.length)
-    assert_equal(456, stack.pop)
-    assert_equal(1, stack.pop)
+    assert_equal(2, list.length)
+    assert_equal(456, list.pop)
+    assert_equal(1, list.pop)
   end
 
   def test_popping_an_item
-    stack = List.new
-    stack.push 123
+    list = List.new
+    list.push 123
 
-    assert_equal(123, stack.pop)
-    assert_equal(0, stack.length)
+    assert_equal(123, list.pop)
+    assert_equal(0, list.length)
   end
 
   def test_popping_last_item
-    stack = List.new
-    stack.push 123
+    list = List.new
+    list.push 123
 
-    assert_equal(123, stack.pop)
-    assert_equal(0, stack.length)
-    assert_equal(nil, stack.pop)
-    assert_equal(nil, stack.head)
+    assert_equal(123, list.pop)
+    assert_equal(0, list.length)
+    assert_equal(nil, list.pop)
+    assert_equal(nil, list.head)
   end
 
   def test_empty_length
-    stack = List.new
-    assert_equal(0, stack.length)
+    list = List.new
+    assert_equal(0, list.length)
   end
 
   def test_each_element
-    stack = List.new
-    stack.push 1
-    stack.push 456
+    list = List.new
+    list.push 1
+    list.push 456
 
     values = []
-    stack.each_element do |element|
+    list.each_element do |element|
       values << element.value
     end
     assert_equal([456, 1], values)
   end
 
   def test_delete_with_a_simple_case
-    stack = List.new
-    stack.push 1
-    stack.push 456
-    stack.push 1024
+    list = List.new
+    list.push 1
+    list.push 456
+    list.push 1024
 
-    stack.delete(456)
-    assert_equal(1024, stack.pop)
-    assert_equal(1, stack.pop)
+    list.delete(456)
+    assert_equal(1024, list.pop)
+    assert_equal(1, list.pop)
   end
 
   def test_deleting_head_of_list
-    stack = List.new
-    stack.push 1
-    stack.push 456
-    stack.push 1024
+    list = List.new
+    list.push 1
+    list.push 456
+    list.push 1024
 
-    stack.delete(1024)
-    assert_equal(456, stack.pop)
-    assert_equal(1, stack.pop)
+    list.delete(1024)
+    assert_equal(456, list.pop)
+    assert_equal(1, list.pop)
   end
 
   def test_deleting_only_element
-    stack = List.new
-    stack.push 1024
+    list = List.new
+    list.push 1024
 
-    stack.delete(1024)
-    assert_equal(0, stack.length)
+    list.delete(1024)
+    assert_equal(0, list.length)
   end
 
   def test_deleting_final_element
-    stack = List.new
-    stack.push 1
-    stack.push 456
-    stack.push 1024
+    list = List.new
+    list.push 1
+    list.push 456
+    list.push 1024
 
-    stack.delete(1)
-    assert_equal(1024, stack.pop)
-    assert_equal(456, stack.pop)
+    list.delete(1)
+    assert_equal(1024, list.pop)
+    assert_equal(456, list.pop)
+  end
+
+  def test_insert_after
+    list = List.new
+    list.push 1
+    list.push 456
+    list.push 1024
+
+    list.insert_after(456, 'abc')
+    assert_equal(1024, list.pop)
+    assert_equal(456, list.pop)
+    assert_equal('abc', list.pop)
+    assert_equal(1, list.pop)
+  end
+
+  def test_append
+    list = List.new
+    list.push 1
+    list.push 456
+    list.append(1024)
+
+    assert_equal(456, list.pop)
+    assert_equal(1, list.pop)
+    assert_equal(1024, list.pop)
+    assert_equal(nil, list.pop)
   end
 end
