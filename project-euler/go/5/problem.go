@@ -6,7 +6,7 @@ func problem() int {
 	found := 0
 
 	for i := 0; ; i++ {
-		for j := 1; j <= 20; j++ {
+		for j := 20; j > 0; j-- {
 			found = i
 			if i%j != 0 {
 				found = 0
