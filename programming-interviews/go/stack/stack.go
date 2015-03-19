@@ -45,6 +45,9 @@ func (s *Stack) Push(v interface{}) *Element {
 
 func (s *Stack) Pop() interface{} {
 	e := s.head
-	s.head = e.next
-	return e.value
+	if e != nil {
+		s.head = e.next
+		return e.value
+	}
+	return nil
 }

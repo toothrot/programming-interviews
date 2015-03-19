@@ -68,3 +68,17 @@ func TestPopTwoThings(t *testing.T) {
 		t.Errorf("oh no! expected: %s got: %s", expected, got)
 	}
 }
+
+func TestPopTooManyThings(t *testing.T) {
+	s := New()
+	s.Push("abc")
+	s.Push("def")
+
+	s.Pop()
+	s.Pop()
+	got := s.Pop()
+
+	if got != nil {
+		t.Errorf("oh no! expected: %s got: %s", nil, got)
+	}
+}
