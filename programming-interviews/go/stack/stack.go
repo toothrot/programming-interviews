@@ -2,7 +2,7 @@ package stack
 
 type Element struct {
 	next  *Element
-	Value interface{}
+	value interface{}
 }
 
 type Stack struct {
@@ -35,9 +35,16 @@ func (s *Stack) Head() *Element {
 	return nil
 }
 
-func (s *Stack) Push(interface{}) *Element {
+func (s *Stack) Push(v interface{}) *Element {
 	e := new(Element)
+	e.value = v
 	e.next = s.head
 	s.head = e
 	return e
+}
+
+func (s *Stack) Pop() interface{} {
+	e := s.head
+	s.head = e.next
+	return e.value
 }
