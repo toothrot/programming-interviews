@@ -1,15 +1,13 @@
-WITH primes AS (
-  SELECT n 
-  FROM generate_series(3,(|/600851475143)::integer, 2) i(n)
-  WHERE NOT EXISTS(
-    SELECT 1 
-    FROM generate_series(2,(|/n)::integer) ints(i)
-    WHERE n % i = 0
+\timing
+with primes AS (
+  select n
+  from generate_series(3,(|/600851475143)::integer, 2) gs(n)
+  where not exists (
+    select 1
+    from generate_series(2,(|/gs.n)::integer) ints(i)
+    where n % i = 0
   )
+  AND 600851475143 % gs.n = 0
 )
 
-SELECT max(n)
-FROM primes
-WHERE 600851475143 % n = 0
-  AND n < (|/600851475143) 
-;
+select max(n) from primes;
